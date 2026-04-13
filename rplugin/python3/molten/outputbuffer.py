@@ -122,9 +122,9 @@ class OutputBuffer:
             time = ""
 
         if output.status == OutputStatus.NEW:
-            return f"Out[_]: Never Run"
+            return f"╭─ Out[_]: Never Run"
         else:
-            return f"{old}Out[{execution_count}]: {status} {time}".rstrip()
+            return f"╭─ {old}Out[{execution_count}]: {status} {time}".rstrip()
 
     def enter(self, anchor: Position) -> bool:
         entered = False
@@ -208,7 +208,7 @@ class OutputBuffer:
             for chunk in self.output.chunks:
                 y = lineno
                 if virtual:
-                    y = shape[1]
+                    y = shape[1] + lineno
                 chunktext, virt_lines = chunk.place(
                     buf,
                     self.options,
@@ -242,7 +242,12 @@ class OutputBuffer:
         if self.options.image_provider == "snacks.nvim":
             lines.append("")
 
-        lines.insert(0, self._get_header_text(self.output))
+        header_line = self._get_header_text(self.output)
+        block_width = min(shape[2], max([32, len(header_line)] + [len(line) for line in lines]))
+        padded_lines = [line.ljust(block_width) for line in lines]
+        lines = [header_line + ("─" * max(0, block_width - len(header_line)))]
+        lines.extend(padded_lines)
+        lines.append("╰" + ("─" * max(0, block_width - 1)))
         return lines, len(lines) - 1 + virtual_lines
 
     def show_virtual_output(self, anchor: Position) -> None:

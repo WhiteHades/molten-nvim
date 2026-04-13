@@ -48,12 +48,7 @@ ANSI_CODE_REGEX = re.compile(r"\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])")
 
 
 def clean_up_text(text: str) -> str:
-    return (
-        ANSI_CODE_REGEX
-        .sub("", text)
-        .replace("\r\n", "\n")
-        .replace("\n\n", "\n")
-    )
+    return ANSI_CODE_REGEX.sub("", text).replace("\r\n", "\n").replace("\n\n", "\n")
 
 
 class TextOutputChunk(OutputChunk):
@@ -173,7 +168,7 @@ class ImageOutputChunk(OutputChunk):
         )
         # images are rendered into virtual lines following the current line,
         # which also needs to exist as the extmark is placed there
-        return " \n", canvas.img_size(self.img_identifier)["height"]
+        return " \n \n", canvas.img_size(self.img_identifier)["height"]
 
 
 class OutputStatus(Enum):
