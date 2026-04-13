@@ -39,6 +39,7 @@ class OutputChunk(ABC):
         canvas: Canvas,
         hard_wrap: bool,
         winnr: int | None = None,
+        render_offset_top: int = 0,
     ) -> Tuple[str, int]:
         pass
 
@@ -71,6 +72,7 @@ class TextOutputChunk(OutputChunk):
         _canvas: Canvas,
         hard_wrap: bool,
         winnr: int | None = None,
+        _render_offset_top: int = 0,
     ) -> Tuple[str, int]:
         text = clean_up_text(self.text)
         extra_lines = 0
@@ -153,6 +155,7 @@ class ImageOutputChunk(OutputChunk):
         canvas: Canvas,
         virtual: bool,
         winnr: int | None = None,
+        render_offset_top: int = 0,
     ) -> Tuple[str, int]:
         loc = options.image_location
         if not (loc == "both" or (loc == "virt" and virtual) or (loc == "float" and not virtual)):
@@ -165,6 +168,7 @@ class ImageOutputChunk(OutputChunk):
             lineno,
             bufnr,
             winnr,
+            render_offset_top=render_offset_top,
         )
         # images are rendered into virtual lines following the current line,
         # which also needs to exist as the extmark is placed there

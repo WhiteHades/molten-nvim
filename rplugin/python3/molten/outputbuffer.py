@@ -207,8 +207,13 @@ class OutputBuffer:
             x = 0
             for chunk in self.output.chunks:
                 y = lineno
+                render_offset_top = 0
                 if virtual:
-                    y = shape[1] + lineno
+                    if isinstance(chunk, ImageOutputChunk):
+                        y = shape[1]
+                        render_offset_top = lineno
+                    else:
+                        y = shape[1] + lineno
                 chunktext, virt_lines = chunk.place(
                     buf,
                     self.options,
@@ -218,6 +223,7 @@ class OutputBuffer:
                     self.canvas,
                     virtual,
                     winnr=self.nvim.current.window.handle if virtual else None,
+                    render_offset_top=render_offset_top,
                 )
                 lines_str += chunktext
                 lineno += chunktext.count("\n")
@@ -243,7 +249,7 @@ class OutputBuffer:
             lines.append("")
 
         header_line = self._get_header_text(self.output)
-        block_width = min(shape[2], max([32, len(header_line)] + [len(line) for line in lines]))
+        block_width = max(32, shape[2])
         padded_lines = [line.ljust(block_width) for line in lines]
         lines = [header_line + ("─" * max(0, block_width - len(header_line)))]
         lines.extend(padded_lines)

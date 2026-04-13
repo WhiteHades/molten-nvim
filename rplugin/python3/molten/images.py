@@ -50,6 +50,7 @@ class Canvas(ABC):
         y: int,
         bufnr: int,
         winnr: int | None = None,
+        render_offset_top: int = 0,
     ) -> str:
         """
         Add an image to the canvas.
@@ -107,6 +108,7 @@ class NoCanvas(Canvas):
         _y: int,
         _bufnr: int,
         _winnr: int,
+        _render_offset_top: int = 0,
     ) -> None:
         pass
 
@@ -164,6 +166,7 @@ class ImageNvimCanvas(Canvas):
         y: int,
         bufnr: int,
         winnr: int | None = None,
+        render_offset_top: int = 0,
     ) -> str:
         img = self.image_api.from_file(
             path,
@@ -174,6 +177,7 @@ class ImageNvimCanvas(Canvas):
                 "x": x,
                 "y": y,
                 "window": winnr,
+                "render_offset_top": render_offset_top,
             },
         )
         self.to_make_visible.add(img)
@@ -240,6 +244,7 @@ class WeztermCanvas(Canvas):
         _y: int,
         _bufnr: int,
         _winnr: int,
+        _render_offset_top: int = 0,
     ) -> str | dict[str, str]:
         """Adds an image to the queue to be rendered by Wezterm via the place method"""
         img = {"path": path, "id": identifier}
