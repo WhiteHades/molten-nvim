@@ -51,6 +51,7 @@ class Canvas(ABC):
         bufnr: int,
         winnr: int | None = None,
         render_offset_top: int = 0,
+        with_virtual_padding: bool = True,
     ) -> str:
         """
         Add an image to the canvas.
@@ -109,6 +110,7 @@ class NoCanvas(Canvas):
         _bufnr: int,
         _winnr: int,
         _render_offset_top: int = 0,
+        _with_virtual_padding: bool = True,
     ) -> None:
         pass
 
@@ -167,13 +169,14 @@ class ImageNvimCanvas(Canvas):
         bufnr: int,
         winnr: int | None = None,
         render_offset_top: int = 0,
+        with_virtual_padding: bool = True,
     ) -> str:
         img = self.image_api.from_file(
             path,
             {
                 "id": identifier,
                 "buffer": bufnr,
-                "with_virtual_padding": True,
+                "with_virtual_padding": with_virtual_padding,
                 "x": x,
                 "y": y,
                 "window": winnr,
@@ -245,6 +248,7 @@ class WeztermCanvas(Canvas):
         _bufnr: int,
         _winnr: int,
         _render_offset_top: int = 0,
+        _with_virtual_padding: bool = True,
     ) -> str | dict[str, str]:
         """Adds an image to the queue to be rendered by Wezterm via the place method"""
         img = {"path": path, "id": identifier}

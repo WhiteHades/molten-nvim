@@ -263,8 +263,7 @@ class OutputBuffer:
         padded_lines = [line.ljust(block_width) for line in lines]
         lines = [header_line + ("─" * max(0, block_width - len(header_line)))]
         lines.extend(padded_lines)
-        if not virtual:
-            lines.append("╰" + ("─" * max(0, block_width - 1)))
+        lines.append("╰" + ("─" * max(0, block_width - 1)))
         return lines, len(lines) - 1 + virtual_lines
 
     def show_virtual_output(self, anchor: Position) -> None:

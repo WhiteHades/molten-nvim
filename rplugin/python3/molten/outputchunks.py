@@ -161,6 +161,9 @@ class ImageOutputChunk(OutputChunk):
         if not (loc == "both" or (loc == "virt" and virtual) or (loc == "float" and not virtual)):
             return "", 0
 
+        image_height = 0
+        with_virtual_padding = not virtual
+
         self.img_identifier = canvas.add_image(
             self.img_path,
             f"{'virt-' if virtual else ''}{self.img_path}",
@@ -169,10 +172,14 @@ class ImageOutputChunk(OutputChunk):
             bufnr,
             winnr,
             render_offset_top=render_offset_top,
+            with_virtual_padding=with_virtual_padding,
         )
+        image_height = canvas.img_size(self.img_identifier)["height"]
         # images are rendered into virtual lines following the current line,
         # which also needs to exist as the extmark is placed there
-        return " \n \n", canvas.img_size(self.img_identifier)["height"]
+        if virtual:
+            return (" \n" * (image_height + 1)), 0
+        return " \n \n", image_height
 
 
 class OutputStatus(Enum):
