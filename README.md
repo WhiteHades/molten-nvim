@@ -24,6 +24,29 @@ https://github.com/benlubas/molten-nvim/assets/56943754/17ae81c0-306f-4496-bce8-
 - Python virtual environment support
 - Import and Export outputs to and from jupyter notebook files (**does not convert ipynb to plaintext**)
 
+## Why This Fork Exists
+
+Forks should have a reason. This one does.
+
+Molten became important to people using Neovim as a notebook editor, but that is also where it was
+most fragile. The hard part was not running cells. It was everything around that: mixed text and
+image output, persistent inline output that still looked coherent, and a workflow that did not fall
+apart the moment you updated plugins.
+
+This fork exists to keep Molten useful for that kind of work without turning it into a different
+plugin. The plan is to stay close to upstream where possible, and only carry changes that make the
+notebook path more reliable, more legible, or easier to maintain.
+
+Right now that mostly means three things:
+
+- inline image placement is more stable when text output and image output appear in the same cell
+- image output gets spacer lines around it, so plots do not crash into neighboring text
+- persistent virtual output is padded into a real block, so it looks like one thing instead of a
+  few highlighted fragments
+
+That is why this fork is public. If Molten matters to your workflow too, you should be able to use
+it, inspect it, and improve it.
+
 ## Requirements
 
 - NeoVim 9.4+
@@ -225,8 +248,10 @@ variable, their values, and a brief description.
 Molten has two image providers, `image.nvim` or `wezterm`:
 
 - `image.nvim` requires the [image.nvim](https://github.com/3rd/image.nvim) plugin (and its
-dependencies). It renders images in neovim inline with other cell output. This creates a better
-experience, but it can be buggy with large numbers of images, and it does not work on Windows.
+  dependencies). It renders images in neovim inline with other cell output. This creates a better
+  experience, but it can be buggy with large numbers of images, and it does not work on Windows.
+  This fork includes extra virtual-output spacing and placement fixes intended to improve mixed
+  text-and-image notebook output.
 
 - `wezterm` requires the [wezterm.nvim](https://willothy/wezterm.nvim) plugin (and the wezterm
   terminal emulator). It renders images in a wezterm split pane using wezterm's `imgcat` program. This

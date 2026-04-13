@@ -51,6 +51,9 @@ vim.g.molten_auto_open_output = false
 -- Don't forget to setup and install the plugin if you want to view image outputs
 vim.g.molten_image_provider = "image.nvim"
 
+-- if you want notebook-style persistent inline image output, keep images in virtual output
+vim.g.molten_image_location = "virt"
+
 -- optional, I like wrapping. works for virt text and the output window
 vim.g.molten_wrap_output = true
 
@@ -60,7 +63,16 @@ vim.g.molten_virt_text_output = true
 
 -- this will make it so the output shows up below the \`\`\` cell delimiter
 vim.g.molten_virt_lines_off_by_1 = true
+
+-- optional, but useful if you want the floating output window to look more like a real output panel
+vim.g.molten_output_show_more = true
+vim.g.molten_use_border_highlights = true
 ```
+
+If you are using this fork specifically for notebook editing, the virtual output path is where most
+of the maintenance effort goes. In particular, mixed text and image outputs should stack more
+cleanly than they used to, and persistent virtual output is rendered as a single padded block
+instead of a handful of unrelated highlighted lines.
 
 Additionally, you will want to setup some keybinds (as always, change the lhs to suit your
 needs) to run code and interact with the plugin. **At a minimum you should setup:**
