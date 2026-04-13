@@ -207,24 +207,34 @@ class OutputBuffer:
             x = 0
             for chunk in self.output.chunks:
                 y = lineno
-                render_offset_top = 0
                 if virtual:
                     if isinstance(chunk, ImageOutputChunk):
                         y = shape[1]
-                        render_offset_top = lineno
                     else:
                         y = shape[1] + lineno
-                chunktext, virt_lines = chunk.place(
-                    buf,
-                    self.options,
-                    x,
-                    y,
-                    shape,
-                    self.canvas,
-                    virtual,
-                    winnr=self.nvim.current.window.handle if virtual else None,
-                    render_offset_top=render_offset_top,
-                )
+                if virtual and isinstance(chunk, ImageOutputChunk):
+                    chunktext, virt_lines = chunk.place(
+                        buf,
+                        self.options,
+                        x,
+                        y,
+                        shape,
+                        self.canvas,
+                        virtual,
+                        winnr=self.nvim.current.window.handle if virtual else None,
+                        render_offset_top=lineno,
+                    )
+                else:
+                    chunktext, virt_lines = chunk.place(
+                        buf,
+                        self.options,
+                        x,
+                        y,
+                        shape,
+                        self.canvas,
+                        virtual,
+                        winnr=self.nvim.current.window.handle if virtual else None,
+                    )
                 lines_str += chunktext
                 lineno += chunktext.count("\n")
                 virtual_lines += virt_lines
